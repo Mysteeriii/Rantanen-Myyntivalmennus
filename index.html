@@ -10,7 +10,7 @@
     <div class="container">
         <h1>Tervetuloa myyntivalmennukseen!</h1>
         <p>Ilmoittaudu mukaan täyttämällä alla oleva lomake.</p>
-        
+
         <form id="signup-form">
             <label for="name">Nimi:</label>
             <input type="text" id="name" name="name" required>
@@ -20,7 +20,37 @@
 
             <button type="submit">Ilmoittaudu</button>
         </form>
+
+        <p id="response-message"></p> <!-- Ilmoitusviesti käyttäjälle -->
+
     </div>
-    <script src="signup.js"></script>
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Estetään sivun uudelleenlataus
+
+            const formData = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value
+            };
+
+            const webhookURL = "https://script.google.com/macros/s/AKfycbzcG-WTt2u0nRy9PQX3clI42i60m25-6nepDZLjI-kogyajDgHTnzU1KHRDT3MzOzbU/exec";
+
+            try {
+                let response = await fetch(webhookURL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                let result = await response.text();
+                document.getElementById("response-message").innerText = result; // Näytetään vastaus käyttäjälle
+            } catch (error) {
+                console.error("Virhe:", error);
+                document.getElementById("response-message").innerText = "Ilmoittautuminen epäonnistui. Yritä uudelleen.";
+            }
+        });
+    </script>
 </body>
 </html>
