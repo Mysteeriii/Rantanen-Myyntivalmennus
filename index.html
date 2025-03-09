@@ -11,7 +11,7 @@
         <h1>Tervetuloa myyntivalmennukseen!</h1>
         <p>Ilmoittaudu mukaan täyttämällä alla oleva lomake.</p>
         
-        <form id="signup-form">
+        <form id="signup-form" action="https://script.google.com/macros/s/AKfycbwKU7qCVpAAsHJzTh8jMGFmAY-M0qjq2oxqNzY0yYD0QikEeDqqUDlMU8IaOX1d_THXqQ/exec" method="POST" target="hidden-iframe">
             <label for="name">Nimi:</label>
             <input type="text" id="name" name="name" required>
 
@@ -21,41 +21,9 @@
             <button type="submit">Ilmoittaudu</button>
         </form>
 
-        <p id="response-message"></p> <!-- Tänne näytetään ilmoittautumisen tila -->
+        <iframe name="hidden-iframe" style="display:none;"></iframe> <!-- Estää siirtymisen pois sivulta -->
+
+        <p id="response-message"></p>
     </div>
-    
-    <script>
-        document.getElementById("signup-form").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
-            const responseMessage = document.getElementById("response-message");
-
-            const scriptURL = "https://script.google.com/macros/s/AKfycbxMMLb59uDU5Brzx8MHFji6GNkZXSTpRJJlTYSuFNDz9wQT-b0VytxCREcG9ntHOzsf/exec";
-            
-            try {
-                const response = await fetch(scriptURL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, email })
-                });
-
-                const result = await response.text(); // Google Apps Script palauttaa vastauksen tekstinä
-                
-                if (response.ok) {
-                    responseMessage.textContent = "✅ Ilmoittautuminen onnistui!";
-                    responseMessage.style.color = "green";
-                    document.getElementById("signup-form").reset(); // Tyhjennetään lomake
-                } else {
-                    throw new Error(result);
-                }
-            } catch (error) {
-                responseMessage.textContent = "❌ Ilmoittautuminen epäonnistui. Yritä uudelleen.";
-                responseMessage.style.color = "red";
-                console.error("Virhe:", error);
-            }
-        });
-    </script>
 </body>
 </html>
