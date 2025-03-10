@@ -1,50 +1,44 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rantanen Myyntivalmennus</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>AI Rantanen Ilmoittautuminen</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Tervetuloa myyntivalmennukseen!</h1>
-        <p>Ilmoittaudu mukaan täyttämällä alla oleva lomake.</p>
-        
-        <label for="name">Nimi:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">Sähköposti:</label>
-        <input type="email" id="email" name="email" required>
-
-        <button id="submit">Ilmoittaudu</button>
-
-        <p id="response-message"></p>
-    </div>
-
+    <form id="ilmoittautumisLomake">
+        <label for="nimi">Nimi:</label><br>
+        <input type="text" id="nimi" name="nimi"><br>
+        <label for="sahkoposti">Sähköposti:</label><br>
+        <input type="email" id="sahkoposti" name="sahkoposti"><br><br>
+        <button type="button" onclick="lahetaIlmoittautuminen()">Lähetä</button>
+    </form>
     <script>
-        document.getElementById("submit").addEventListener("click", async function () {
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
-            const responseMessage = document.getElementById("response-message");
+        function lahetaIlmoittautuminen() {
+            var nimi = document.getElementById("nimi").value;
+            var sahkoposti = document.getElementById("sahkoposti").value;
+            var url = "https://script.google.com/macros/s/AKfycbzLrZMHqrY9nPGUmDsnyRidwDb-fBrbHW6-oWdYzWSyt2sMqLdZt4RtYoHKfpSPGLbLSQ/exec"; // Korvaa tällä oikealla URL-osoitteella
 
-            const response = await fetch("https://script.google.com/macros/s/AKfycbzLrZMHqrY9nPGUmDsnyRidwDb-fBrbHW6-oWdYzWSyt2sMqLdZt4RtYoHKfpSPGLbLSQ/exec", {
+            var data = {
+                nimi: nimi,
+                sahkoposti: sahkoposti
+            };
+
+            fetch(url, {
                 method: "POST",
+                mode: 'no-cors',
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ name, email })
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                console.log("Ilmoittautuminen lähetetty!");
+                alert("Ilmoittautuminen lähetetty!");
+            })
+            .catch(error => {
+                console.error("Virhe:", error);
+                alert("Ilmoittautuminen epäonnistui!");
             });
-
-            const result = await response.json();
-            if (result.result === "success") {
-                responseMessage.textContent = "✅ Ilmoittautuminen onnistui!";
-                responseMessage.style.color = "green";
-            } else {
-                responseMessage.textContent = "❌ Ilmoittautuminen epäonnistui!";
-                responseMessage.style.color = "red";
-            }
-        });
+        }
     </script>
 </body>
 </html>
